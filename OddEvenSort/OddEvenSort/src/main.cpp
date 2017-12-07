@@ -1,0 +1,115 @@
+#include "OddEvenSingle.h"
+#include "OddEven.h"
+#include "RandomGenerator.h"
+#include <iostream>
+#include <algorithm>
+#include<chrono>
+#include "Log.h"
+
+std::unique_ptr<int> worstCase(int len);
+void runParallel(int* arr, int arr_len);
+void runSingle(int* arr, int arr_len);
+void outVerification(int* arr, int arr_len);
+
+int main()
+{
+	mf::RandomGenerator rnd;
+	mf::Log log("Counters.txt", false, false, true);
+
+	const int num_test = 12;
+	const int num_repeat = 5;
+	int test = 3;
+	for (int i = 12; i <= num_test; i++)
+	{
+
+		double total_time = 0;
+		int arr_len = 1024*std::pow(2, i);
+		arr_len = 1024 * 1024;
+		int threads = 32 * std::pow(2, i); //Multi only
+		//threads = 65536;
+		for (int run = 0; run < num_repeat; run++)
+		{
+			std::unique_ptr<int> arr = rnd.randomSetofInt(arr_len, -arr_len, arr_len);
+			//std::unique_ptr<int> arr = worstCase(arr_len);
+
+			std::chrono::steady_clock::time_point begin = std::chrono::steady_clock::now();
+
+			//Execute:
+			if (test == 0)
+			{	
+				std::cout << "Running single threaded CPU...\n";
+				runSingle(arr.get(), arr_len);
+			}
+			else if (test == 1)
+			{
+				std::cout << "Running parallel block implementation...\n";
+				runParallel(arr.get(), arr_len);
+			}
+			else if (test == 2)
+			{
+				std::cout << "Running GPU multiple elment per thread implementation...\n";
+				oddEvenSortCudaMulti(arr.get(), arr_len, threads);
+			}
+			else if (test == 3)
+			{
+				std::cout << "Running GPU simple implementation...\n";
+				oddEvenSortCudaSimple(arr.get(), arr_len);
+			}
+
+			std::chrono::steady_clock::time_point end = std::chrono::steady_clock::now();
+			//outVerification(arr.get(), arr_len);
+			verify(arr.get(), arr_len);
+			//Time measure: cast to microseconds/nanoseconds for better perf:
+			double sec = std::chrono::duration_cast<std::chrono::milliseconds>(end - begin).count() / 1000.0;
+			std::cout << "Time difference = " << sec << " s" << std::endl;
+			total_time += sec;
+			std::cout << std::endl;
+
+		}
+
+		double avg_sec = total_time / num_repeat;
+		//Construct message:
+		std::string msg = (test == 2 ? "sec/n/threads" : "sec/n");
+		msg += "\t" + std::to_string(avg_sec) + "\t" + std::to_string(arr_len);
+		if (test == 2) msg += "\t" + std::to_string(threads);
+		log.logMsg(msg);
+
+		std::cout << "Test complete!\n";
+		std::cout << "Avg. Time difference = " << avg_sec << " s" << std::endl;
+	}
+
+	std::getchar();
+}
+
+void runSingle(int* arr, int arr_len)
+{
+	//Run single threaded:
+	oddEvenSortSingle(arr, arr_len);
+}
+void runParallel(int* arr, int arr_len)
+{
+	//Run multi threaded:
+	//oddEvenSortCuda(arr, arr_len);
+	oddEvenSortCudaSimple(arr, arr_len);
+}
+
+void outVerification(int* arr, int arr_len)
+{
+	std::cout << "Array sort complete!\n";
+	std::cout << "Verifying...\n";
+
+	verify(arr, arr_len);
+
+	std::cout << "Debug print:\n";
+	printArr(arr, 0, 10);
+	printArr(arr, arr_len / 2 - std::min(10, arr_len / 2), arr_len / 2 + std::min(10, arr_len / 2));
+	printArr(arr, arr_len - 10, arr_len);
+}
+
+std::unique_ptr<int> worstCase(int len)
+{
+	int* arr = new int[len];
+	for (int i = 0; i < len; i++)
+		arr[i] = len - i - 1;
+	return std::unique_ptr<int>(arr);
+}

@@ -1,0 +1,25 @@
+Log initialized <2017-11-22 22:20:45>
+sec/n/threads	11.441000	524288	131072
+sec/n/threads	11.621400	524288	262144
+sec/n/threads	13.383800	524288	524288
+Log initialized <2017-11-22 22:25:09>
+Log initialized <2017-11-22 22:26:17>
+Log initialized <2017-11-22 22:27:55>
+Log initialized <2017-11-22 22:28:35>
+sec/n	0.123000	1024
+sec/n	0.011800	2048
+sec/n	0.023400	4096
+sec/n	0.048600	8192
+sec/n	0.092400	16384
+sec/n	0.201000	32768
+sec/n	0.444200	65536
+sec/n	1.082000	131072
+sec/n	2.922200	262144
+sec/n	11.502200	524288
+sec/n	40.374600	1048576
+Log initialized <2017-11-22 22:34:20>
+Log initialized <2017-11-23 15:01:38>
+Log initialized <2017-11-23 15:03:55>
+Log initialized <2017-11-23 15:04:20>
+Log initialized <2017-11-23 15:07:37>
+Log initialized <2017-11-23 15:09:17>
