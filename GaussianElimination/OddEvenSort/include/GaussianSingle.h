@@ -42,3 +42,4 @@ Vector backSubstitute(Matrix mat, Vector b, int n);
 
 void print(Matrix mat);
 void print(Vector vec);
+void print(Vector vec, int n);

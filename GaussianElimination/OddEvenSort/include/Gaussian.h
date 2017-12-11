@@ -16,10 +16,19 @@ const int threads2D = 16;
 #define syncthreads() __syncthreads()
 #endif
 
-inline int div_ceil(int numerator, int denominator);
+inline int div_ceil(int numerator, int denominator)
+{
+	std::div_t res = std::div(numerator, denominator);
+	return res.quot + (res.rem != 0);
+};
 
 Vector gaussSolveCuda(Matrix& mat, Vector& v);
 
 
+/* Swap row k with row i using a single block.
+*/
+__global__ void swapRow(float* mat, float* b, int rows, int cols, int k);
+/* Swap row k with row i using multiple blocks. Outputs the k:th column as a separate vector
+*/
 __global__ void swapRow(float* mat, float* b, float* column_k, int rows, int cols, int k);
 __global__ void greatestRowK(float* mat, int rows, int cols, int k);

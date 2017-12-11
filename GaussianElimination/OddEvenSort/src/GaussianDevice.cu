@@ -63,7 +63,6 @@ Vector gaussSolveCudaDevice(Matrix& mat, Vector& b)
 	{
 		dim3 block1D(threads1D, 1, 1);
 		dim3 block2D(threads2D, threads2D, 1);
-		read(dev_mat, mat.arr.get(), mat.col*mat.row);
 		//Execute:
 		for (int k = 0; k < n; k++)
 		{

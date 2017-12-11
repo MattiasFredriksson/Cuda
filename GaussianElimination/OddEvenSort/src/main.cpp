@@ -1,5 +1,6 @@
 #include "GaussianSingle.h"
 #include "Gaussian.h"
+#include "GaussianMulti.h"
 #include "GaussianDevice.h"
 #include "RandomGenerator.h"
 #include <iostream>
@@ -16,36 +17,91 @@ int main()
 	mf::RandomGenerator rnd;
 	mf::Log log("Counters.txt", false, false, true);
 
-	Matrix mat;
-	Vector vec;
-	//exampleA(mat, vec);
-	exampleB(mat, vec, 4096, 1);
+
+	bool thread_mode = true;
+	int num_repeat = 5;
+	int mode_0 = 0, mode_1 = 3;
+	int num_mode = thread_mode ? 3 : mode_1;
+
+	for (int mode = thread_mode ? 2 : mode_0; mode < num_mode; mode++)
+	{
+		log.logMsg("Mode: " + std::to_string(mode));
+		std::cout << "Executing mode: " << std::to_string(mode) << std::endl;
+		int max_elem = thread_mode ? 12 : 14;
+		int min_elem = 5;
+		for (int num = min_elem; num < max_elem; num++)
+		{
+			Matrix mat;
+			Vector vec;
+			int elem_count = thread_mode ? 4096 : 2 << num;
+			if (mode == 0 && elem_count > 4096*2) continue;
+			int threads = thread_mode ? 2 << num : elem_count;
+			std::cout << "N: " << elem_count;
+			if (thread_mode) std::cout << "  T: " << threads;
+			std::cout << std::endl;
+
+			double total_time = 0;
+			//exampleA(mat, vec);
+			exampleB(mat, vec, elem_count, 2);
 #ifdef DEBUG
-	print(mat);
+			if (mat.col * mat.row < 100)
+				print(mat);
 #endif
 
-	std::chrono::steady_clock::time_point begin = std::chrono::steady_clock::now();
+			for (int i = 0; i < num_repeat; i++)
+			{
+				std::chrono::steady_clock::time_point begin = std::chrono::steady_clock::now();
 
-	Vector x;
-	//Execute:
-	for(int i = 0; i < 10; i++)
-		//x = gaussSolveCuda(mat, vec);
-		x = gaussSolveCudaDevice(mat, vec);
-	//x = gaussSolve(mat, vec);
+				Vector x;
+				//Execute:
+				//for(int i = 0; i < 10; i++)
+				switch (mode)
+				{
+				case 1:
+					x = gaussSolveCuda(mat, vec);
+					break;
+				case 2:
+					x = gaussSolveCudaMulti(mat, vec, threads);
+					break;
+					/*
+				case 3:
+					x = gaussSolveCudaDevice(mat, vec);
+					break;
+					*/
+				case 0:
+				default:
+					x = gaussSolve(mat, vec);
+					break;
+				}
 
-	std::chrono::steady_clock::time_point end = std::chrono::steady_clock::now();
-	std::cout << std::endl;
+				std::chrono::steady_clock::time_point end = std::chrono::steady_clock::now();
+				std::cout << std::endl;
 
-	if(mat.col < 5)
-		print(mat);
-	std::cout << "Solution x: ";
-	print(x);
+				std::cout << "\n";
+				//Time measure: cast to microseconds/nanoseconds for better perf:
+				double sec = std::chrono::duration_cast<std::chrono::milliseconds>(end - begin).count() / 1000.0;
+				total_time += sec;
+				//log.logMsg("sec/n: " + std::to_string(sec) + "\t" + std::to_string(arr_len));
+				std::cout << "Execution time = " << sec << " s" << std::endl;
+#ifdef Debug
+				if (mat.col < 5)
+					print(mat);
+#endif
+				std::cout << "Solution x:\n";
+				print(x, 5);
+			}
+			double avg_sec = total_time / num_repeat;
+			//Construct message:
+			std::string msg = (mode == 2 ? "sec/n/threads" : "sec/n");
+			msg += "\t" + std::to_string(avg_sec) + "\t" + std::to_string(elem_count);
+			if (mode == 2) msg += "\t" + std::to_string(threads);
+			log.logMsg(msg);
 
-	std::cout << "\n";
-	//Time measure: cast to microseconds/nanoseconds for better perf:
-	double sec = std::chrono::duration_cast<std::chrono::milliseconds>(end - begin).count() / 1000.0;
-	//log.logMsg("sec/n: " + std::to_string(sec) + "\t" + std::to_string(arr_len));
-	std::cout << "Execution time = " << sec << " s" <<std::endl;
+			std::cout << "Test complete!\n";
+			std::cout << "Avg. Time difference = " << avg_sec << " s" << std::endl;
+		}
+	}
+
 
 	std::getchar();
 }

@@ -5,16 +5,34 @@
 #include <algorithm>
 #include <string>
 
-
-int div_ceil(int numerator, int denominator)
-{
-	std::div_t res = std::div(numerator, denominator);
-	return res.quot + (res.rem != 0);
-};
-
 /* Variable storing the result of greatestRowK func*/
 __device__ int greatest_row;
-/* Swap row k with row i*/
+
+__device__  void swap(float* arr, int ind_a, int ind_b)
+{
+	float tmp = arr[ind_a];
+	arr[ind_a] = arr[ind_b];
+	arr[ind_b] = tmp;
+}
+/* Swap row k with row i using a single block.
+*/
+__global__ void swapRow(float* mat, float* b, int rows, int cols, int k)
+{
+	int row_i = greatest_row;
+	if (k != row_i) //If the same row don't swap.
+	{
+		int row_k = k*cols;
+		int swap_row = row_i*cols;
+		//Swap matrix
+		for (int i = threadIdx.x; i < cols; i += blockDim.x)
+			swap(mat, swap_row + i, row_k + i);
+		// Swap b
+		if(threadIdx.x == 0)
+			swap(b, row_i, k);
+	}
+}
+/* Swap row k with row i using multiple blocks. Outputs the k:th column as a separate vector 
+*/
 __global__ void swapRow(float* mat, float* b, float* column_k, int rows, int cols, int k)
 {
 	int row_i = greatest_row;
@@ -133,7 +151,6 @@ Vector gaussSolveCuda(Matrix& mat, Vector& b)
 		dim3 block1D(threads1D, 1, 1);
 		dim3 block2D(threads2D, threads2D, 1);
 		dim3 gridSwap(div_ceil(mat.col+1,threads1D), 1, 1);
-		read(dev_A, mat.arr.get(), mat.col*mat.row);
 		//Execute:
 		for (int k = 0; k < n; k++)
 		{

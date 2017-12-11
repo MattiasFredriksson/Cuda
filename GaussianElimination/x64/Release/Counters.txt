@@ -1,0 +1,29 @@
+Log initialized <2017-12-11 18:53:12>
+Mode: 2
+Log initialized <2017-12-11 18:57:49>
+Mode: 2
+sec/n/threads	0.626300	512	4096
+Log initialized <2017-12-11 19:13:06>
+Mode: 2
+sec/n/threads	0.401800	512	4096
+Log initialized <2017-12-11 19:17:12>
+Mode: 2
+sec/n/threads	5.878900	512	4096
+Log initialized <2017-12-11 19:32:04>
+Mode: 2
+sec/n/threads	0.426000	512	4096
+Log initialized <2017-12-11 19:33:06>
+Mode: 2
+sec/n/threads	0.543500	512	4096
+Log initialized <2017-12-11 19:34:43>
+Mode: 2
+sec/n/threads	0.406800	512	4096
+Log initialized <2017-12-11 19:35:16>
+Mode: 2
+sec/n/threads	1.180900	512	4096
+Log initialized <2017-12-11 19:36:07>
+Mode: 2
+sec/n/threads	1.726900	512	4096
+Log initialized <2017-12-11 19:37:16>
+Mode: 2
+sec/n/threads	0.200100	512	4096

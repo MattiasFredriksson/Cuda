@@ -96,3 +96,19 @@ void print(Vector vec)
 		std::cout << vec[i] << ",\t";
 	std::cout << "\n";
 }
+
+void print(Vector vec, int n)
+{
+	std::cout << "Vec: ";
+	for (int i = 0; i < vec.length && i < n; i++)
+		std::cout << vec[i] << ",\t";
+	if (n < vec.length)
+	{
+		std::cout << " . . . ";
+		n /= 2;
+		for (int i = vec.length - n; i < vec.length; i++)
+			std::cout << vec[i] << ",\t";
+	}
+	std::cout << "\n";
+
+}
