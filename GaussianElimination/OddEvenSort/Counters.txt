@@ -1,0 +1,11 @@
+Log initialized <2017-12-12 08:04:59>
+Mode: 2
+sec/n/threads	0.171000	64	64
+sec/n/threads	0.011400	128	128
+sec/n/threads	0.040800	256	256
+sec/n/threads	0.143200	512	512
+sec/n/threads	0.552000	1024	1024
+sec/n/threads	2.208000	2048	2048
+sec/n/threads	10.852800	4096	4096
+sec/n/threads	85.607000	8192	8192
+sec/n/threads	980.774400	16384	16384
