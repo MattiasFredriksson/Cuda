@@ -27,3 +27,32 @@ sec/n/threads	1.726900	512	4096
 Log initialized <2017-12-11 19:37:16>
 Mode: 2
 sec/n/threads	0.200100	512	4096
+Log initialized <2017-12-13 21:04:54>
+Mode: 2
+sec/n/threads	1.758600	4096	64
+Log initialized <2017-12-13 21:06:59>
+Mode: 2
+sec/n/threads	1.664400	4096	1024
+sec/n/threads	0.038600	4096	2048
+sec/n/threads	0.003000	4096	4096
+Log initialized <2017-12-13 21:07:33>
+Mode: 2
+Log initialized <2017-12-13 21:08:40>
+Mode: 2
+sec/n/threads	120.529000	4096	1024
+sec/n/threads	372.134000	4096	2048
+sec/n/threads	786.772000	4096	4096
+Log initialized <2017-12-13 21:56:38>
+Mode: 2
+sec/n/threads	127.364000	4096	1024
+Log initialized <2017-12-13 21:59:16>
+Mode: 2
+sec/n/threads	3.168000	4096	1024
+Log initialized <2017-12-13 21:59:52>
+Mode: 2
+sec/n/threads	39.376000	4096	1024
+Log initialized <2017-12-13 22:01:12>
+Mode: 2
+Log initialized <2017-12-13 22:12:27>
+Mode: 2
+sec/n/threads	124.247000	4096	1024

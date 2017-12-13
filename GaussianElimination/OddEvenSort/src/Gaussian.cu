@@ -29,13 +29,11 @@ __global__ void swapRow(float* mat, float* b, int cols, int num_block, int k)
 		int row_k = k*cols;
 		int swap_row = row_i*cols;
 		//	Calc. swap interval
-		int per_block = blockDim.x * cuda_div_ceil_pos(cols, num_block * blockDim.x);
-		int i = threadIdx.x + blockIdx.x * per_block;
-		int iter_end = min(cols, blockIdx.x * per_block + per_block);
+		int i = threadIdx.x + blockIdx.x * blockDim.x;
 		// Swap matrix
-		for (; i < iter_end; i += blockDim.x)
+		for (; i < cols; i += num_block*blockDim.x)
 			swap(mat, swap_row + i, row_k + i);
-		// Swap b
+			// Swap b
 		if(blockIdx.x == 0 && threadIdx.x == 0)
 			swap(b, row_i, k);
 	}
@@ -160,7 +158,7 @@ Vector gaussSolveCuda(Matrix& mat, Vector& b)
 		dim3 block2D(threads2D, threads2D, 1);
 		dim3 gridSwap(div_ceil(mat.col+1,threads1D), 1, 1);
 		//Execute:
-		for (int k = 0; k < n; k++)
+		for (int k = 0; k < n - 1; k++)
 		{
 			greatestRowK <<<1,block1D>>> (dev_A, mat.row, mat.col, k);
 

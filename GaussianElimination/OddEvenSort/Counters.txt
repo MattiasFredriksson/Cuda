@@ -1,17 +1,10 @@
-Log initialized <2017-12-12 08:04:59>
+Log initialized <2017-12-14 00:25:04>
 Mode: 2
-sec/n/threads	0.171000	64	64
-sec/n/threads	0.011400	128	128
-sec/n/threads	0.040800	256	256
-sec/n/threads	0.143200	512	512
-sec/n/threads	0.552000	1024	1024
-sec/n/threads	2.208000	2048	2048
-sec/n/threads	10.852800	4096	4096
-sec/n/threads	85.607000	8192	8192
-sec/n/threads	980.774400	16384	16384
-Log initialized <2017-12-13 18:17:05>
-Mode: 2
-sec/n/threads	1.686400	1024	64
-sec/n/threads	1.262200	1024	128
-Log initialized <2017-12-13 18:17:52>
-Mode: 2
+sec/n/threads	0.138400	64	64
+sec/n/threads	0.018600	128	128
+sec/n/threads	0.057400	256	256
+sec/n/threads	0.169800	512	512
+sec/n/threads	0.608200	1024	1024
+sec/n/threads	2.288200	2048	2048
+sec/n/threads	11.110000	4096	4096
+sec/n/threads	86.392000	8192	8192

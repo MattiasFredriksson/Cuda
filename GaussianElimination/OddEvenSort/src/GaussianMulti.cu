@@ -20,10 +20,10 @@ __global__ void gausEliminate_Row_Wise(float* A, float* b, int rows, int cols, i
 
 	for (int col = k; col < cols; col += blockDim.x)
 	{
-		// Iterate the row for threadIdx.x times until new data from the k:th row is needed.
+		// Iterate the row for blockDim.x times until new data from the k:th row is needed.
 		int iter_end = min(blockDim.x, cols - col);
 		// Fetch k:th row data
-		if (threadIdx.x < iter_end)
+		if (col + threadIdx.x < cols)
 			row_k[threadIdx.x] = A[k * cols + col + threadIdx.x];
 		syncthreads(); //Wait for all threads to finish reading
 
@@ -31,10 +31,7 @@ __global__ void gausEliminate_Row_Wise(float* A, float* b, int rows, int cols, i
 		{
 			// Iterate 
 			for (int i = 0; i < iter_end; i++)
-			{
 				A[row_ind + col + i] -= pivot * row_k[i];
-				//printf("i,e,r_k: %d, %f, %f\n", row_ind + col + i, -pivot * row_k[i], row_k[i]);
-			}
 		}
 		syncthreads(); // Wait until all rows/threads are done before next iter.
 	}
@@ -55,10 +52,11 @@ Vector gaussSolveCudaMulti(Matrix& mat, Vector& b, int threads)
 	if (dev_A && dev_b)
 	{
 		dim3 grid(div_ceil(threads, 256), 1, 1);
-		int iter_end = div_ceil(n, threads*grid.x);
+		int iter_end = div_ceil(n, threads);
 		// Resize arr:
 		threads = std::min(256, threads);
 		dim3 block(threads, 1, 1);
+
 		//Execute:
 		for (int k = 0; k < n - 1; k++)
 		{
@@ -69,7 +67,7 @@ Vector gaussSolveCudaMulti(Matrix& mat, Vector& b, int threads)
 			//Launch a kernel (synced to limit threads) for every row:
 			for (int i = 0; i < iter_end; i++)
 				gausEliminate_Row_Wise << <grid, block, threads * sizeof(float) >> > (dev_A, dev_b, mat.row, mat.col, k, i * threads*grid.x);
-
+			cudaDeviceSynchronize();
 #ifdef DEBUG
 			read(dev_A, mat.arr.get(), mat.col*mat.row);
 			read(dev_b, b.arr.get(), n);

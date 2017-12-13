@@ -66,14 +66,14 @@ Vector backSubstitute(Matrix mat, Vector b, int n)
 
 Vector gaussSolve(Matrix mat, Vector v)
 {
-	int max_iter = std::min(mat.col, mat.row);
-	for (int i = 0; i < max_iter; i++)
+	int n = std::min(mat.col, mat.row);
+	for (int i = 0; i < n - 1; i++)
 	{
 		if (!greatestRowK(mat, v, i))
 			return Vector(v.length);
 		gaussEliminate(mat, v, i);
 	}
-	return backSubstitute(mat, v, max_iter);
+	return backSubstitute(mat, v, n);
 }
 
 

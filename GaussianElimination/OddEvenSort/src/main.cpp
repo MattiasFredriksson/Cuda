@@ -18,31 +18,29 @@ int main()
 	mf::Log log("Counters.txt", false, false, true);
 
 
-	bool thread_mode = true;
+	bool thread_mode = false;
 	int num_repeat = 5;
 	int mode_0 = 2, mode_1 = 3;
 	int num_mode = thread_mode ? 3 : mode_1;
+	int max_elem = thread_mode ? 12 : 14;
+	int min_elem = 5;
 
 	for (int mode = thread_mode ? 2 : mode_0; mode < num_mode; mode++)
 	{
 		log.logMsg("Mode: " + std::to_string(mode));
 		std::cout << "Executing mode: " << std::to_string(mode) << std::endl;
-		int max_elem = thread_mode ? 12 : 14;
-		int min_elem = 5;
 		for (int num = min_elem; num < max_elem; num++)
 		{
-			Matrix mat;
-			Vector vec;
+			//Num elem
 			int elem_count = thread_mode ? 4096 : 2 << num;
 			if (mode == 0 && elem_count > 4096*2) continue;
 			int threads = thread_mode ? 2 << num : elem_count;
+			//Print run info
 			std::cout << "N: " << elem_count;
 			if (thread_mode) std::cout << "  T: " << threads;
 			std::cout << std::endl;
 
 			double total_time = 0;
-			//exampleA(mat, vec);
-			exampleB(mat, vec, elem_count, 2);
 #ifdef DEBUG
 			if (mat.col * mat.row < 100)
 				print(mat);
@@ -50,6 +48,10 @@ int main()
 
 			for (int i = 0; i < num_repeat; i++)
 			{
+				Matrix mat;
+				Vector vec;
+				//exampleA(mat, vec);
+				exampleB(mat, vec, elem_count, 2);
 				std::chrono::steady_clock::time_point begin = std::chrono::steady_clock::now();
 
 				Vector x;
