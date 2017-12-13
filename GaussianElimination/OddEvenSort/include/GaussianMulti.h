@@ -12,6 +12,4 @@
 #define syncthreads() __syncthreads()
 #endif
 
-inline int div_ceil(int numerator, int denominator);
-
 Vector gaussSolveCudaMulti(Matrix& mat, Vector& v, int threads);

@@ -9,3 +9,9 @@ sec/n/threads	2.208000	2048	2048
 sec/n/threads	10.852800	4096	4096
 sec/n/threads	85.607000	8192	8192
 sec/n/threads	980.774400	16384	16384
+Log initialized <2017-12-13 18:17:05>
+Mode: 2
+sec/n/threads	1.686400	1024	64
+sec/n/threads	1.262200	1024	128
+Log initialized <2017-12-13 18:17:52>
+Mode: 2

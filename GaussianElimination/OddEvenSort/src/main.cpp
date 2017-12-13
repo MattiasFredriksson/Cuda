@@ -18,7 +18,7 @@ int main()
 	mf::Log log("Counters.txt", false, false, true);
 
 
-	bool thread_mode = false;
+	bool thread_mode = true;
 	int num_repeat = 5;
 	int mode_0 = 2, mode_1 = 3;
 	int num_mode = thread_mode ? 3 : mode_1;

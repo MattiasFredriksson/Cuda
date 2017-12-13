@@ -14,20 +14,29 @@ __device__  void swap(float* arr, int ind_a, int ind_b)
 	arr[ind_a] = arr[ind_b];
 	arr[ind_b] = tmp;
 }
-/* Swap row k with row i using a single block.
+__device__ int div2ceil(int value) { return (value & 1) + (value >> 1); }
+__device__ int cuda_div_ceil(int nume, int denom) { return nume / denom + ((nume % denom) > 0); }
+/* For positive nums with sum less then INT_MAX*/
+__device__ int cuda_div_ceil_pos(int nume, int denom) { return (nume + denom - 1) / denom; }
+
+/* Swap row k with row i, using a specific number of blocks.
 */
-__global__ void swapRow(float* mat, float* b, int rows, int cols, int k)
+__global__ void swapRow(float* mat, float* b, int cols, int num_block, int k)
 {
 	int row_i = greatest_row;
 	if (k != row_i) //If the same row don't swap.
 	{
 		int row_k = k*cols;
 		int swap_row = row_i*cols;
-		//Swap matrix
-		for (int i = threadIdx.x; i < cols; i += blockDim.x)
+		//	Calc. swap interval
+		int per_block = blockDim.x * cuda_div_ceil_pos(cols, num_block * blockDim.x);
+		int i = threadIdx.x + blockIdx.x * per_block;
+		int iter_end = min(cols, blockIdx.x * per_block + per_block);
+		// Swap matrix
+		for (; i < iter_end; i += blockDim.x)
 			swap(mat, swap_row + i, row_k + i);
 		// Swap b
-		if(threadIdx.x == 0)
+		if(blockIdx.x == 0 && threadIdx.x == 0)
 			swap(b, row_i, k);
 	}
 }
@@ -59,7 +68,6 @@ __global__ void swapRow(float* mat, float* b, float* column_k, int rows, int col
 		column_k[i] = mat[i*cols + k];
 }
 
-__device__ int div2ceil(int value) { return (value & 1) + (value >> 1); }
 __global__ void greatestRowK(float* mat, int rows, int cols, int k)
 {
 	__shared__ float col_k[threads1D];

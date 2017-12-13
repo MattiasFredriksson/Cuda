@@ -25,9 +25,9 @@ inline int div_ceil(int numerator, int denominator)
 Vector gaussSolveCuda(Matrix& mat, Vector& v);
 
 
-/* Swap row k with row i using a single block.
+/* Swap row k with row i, using a specific number of blocks.
 */
-__global__ void swapRow(float* mat, float* b, int rows, int cols, int k);
+__global__ void swapRow(float* mat, float* b, int cols, int num_block, int k);
 /* Swap row k with row i using multiple blocks. Outputs the k:th column as a separate vector
 */
 __global__ void swapRow(float* mat, float* b, float* column_k, int rows, int cols, int k);

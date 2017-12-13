@@ -7,7 +7,7 @@
 #include <string>
 
 
-__global__ void gausEliminate_v3(float* A, float* b, int rows, int cols, int k, int row_offset)
+__global__ void gausEliminate_Row_Wise(float* A, float* b, int rows, int cols, int k, int row_offset)
 {
 	 //__shared__ float row_k[256];
 	 extern __shared__ float row_k[];
@@ -64,11 +64,11 @@ Vector gaussSolveCudaMulti(Matrix& mat, Vector& b, int threads)
 		{
 			greatestRowK <<<1, threads1D >>> (dev_A, mat.row, mat.col, k);
 
-			swapRow << <grid, block >> > (dev_A, dev_b, mat.row, mat.col, k);
+			swapRow << <grid, block >> > (dev_A, dev_b, mat.col, grid.x, k);
 
 			//Launch a kernel (synced to limit threads) for every row:
 			for (int i = 0; i < iter_end; i++)
-				gausEliminate_v3 << <grid, block, threads * sizeof(float) >> > (dev_A, dev_b, mat.row, mat.col, k, i * threads*grid.x);
+				gausEliminate_Row_Wise << <grid, block, threads * sizeof(float) >> > (dev_A, dev_b, mat.row, mat.col, k, i * threads*grid.x);
 
 #ifdef DEBUG
 			read(dev_A, mat.arr.get(), mat.col*mat.row);
