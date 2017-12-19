@@ -22,7 +22,7 @@ inline int div_ceil(int numerator, int denominator)
 	return res.quot + (res.rem != 0);
 };
 
-Vector gaussSolveCuda(Matrix& mat, Vector& v);
+Vector gaussSolveCudaBlock(Matrix& mat, Vector& v);
 
 
 /* Swap row k with row i, using a specific number of blocks.

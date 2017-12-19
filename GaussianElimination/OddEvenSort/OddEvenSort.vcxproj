@@ -88,7 +88,7 @@ copy "$(CudaToolkitBinDir)\cudart*.dll" "$(OutDir)"</Command>
     </CudaCompile>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <CudaCompile Include="src\GaussianMulti.cu" />
+    <CudaCompile Include="src\Gaussian_Row_Wise.cu" />
     <CudaCompile Include="src\Gaussian.cu" />
     <CudaCompile Include="src\CudaFuncs.cu" />
     <CudaCompile Include="src\GaussianDevice.cu" />
@@ -100,7 +100,7 @@ copy "$(CudaToolkitBinDir)\cudart*.dll" "$(OutDir)"</Command>
     <ClInclude Include="include\Log.h" />
     <ClInclude Include="include\RandomGenerator.h" />
     <ClInclude Include="include\GaussianDevice.h" />
-    <ClInclude Include="include\GaussianMulti.h" />
+    <ClInclude Include="include\Gaussian_Row_Wise.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\GaussianSingle.cpp" />

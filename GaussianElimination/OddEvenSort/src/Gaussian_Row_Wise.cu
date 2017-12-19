@@ -1,6 +1,6 @@
 #include "CudaFuncs.h"
 #include "Gaussian.h"
-#include "GaussianMulti.h"
+#include "Gaussian_Row_Wise.h"
 #include <device_functions.h>
 #include<iostream>
 #include <algorithm>
@@ -42,7 +42,7 @@ __global__ void gausEliminate_Row_Wise(float* A, float* b, int rows, int cols, i
 	
 }
 
-Vector gaussSolveCudaMulti(Matrix& mat, Vector& b, int threads)
+Vector gaussSolveCudaRowWise(Matrix& mat, Vector& b, int threads)
 {
 	int n = mat.row;
 	Vector x;

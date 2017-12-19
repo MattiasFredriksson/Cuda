@@ -12,4 +12,4 @@
 #define syncthreads() __syncthreads()
 #endif
 
-Vector gaussSolveCudaMulti(Matrix& mat, Vector& v, int threads);
+Vector gaussSolveCudaRowWise(Matrix& mat, Vector& v, int threads);

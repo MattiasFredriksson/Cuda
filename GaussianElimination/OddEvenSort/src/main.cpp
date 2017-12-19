@@ -1,6 +1,6 @@
 #include "GaussianSingle.h"
 #include "Gaussian.h"
-#include "GaussianMulti.h"
+#include "Gaussian_Row_Wise.h"
 #include "GaussianDevice.h"
 #include "RandomGenerator.h"
 #include <iostream>
@@ -19,10 +19,10 @@ int main()
 
 
 	bool thread_mode = false;
-	int num_repeat = 5;
-	int mode_0 = 2, mode_1 = 3;
+	int num_repeat = 1;
+	int mode_0 = 0, mode_1 = 3;
 	int num_mode = thread_mode ? 3 : mode_1;
-	int max_elem = thread_mode ? 12 : 14;
+	int max_elem = thread_mode ? 12 : 11;
 	int min_elem = 5;
 
 	for (int mode = thread_mode ? 2 : mode_0; mode < num_mode; mode++)
@@ -60,10 +60,10 @@ int main()
 				switch (mode)
 				{
 				case 1:
-					x = gaussSolveCuda(mat, vec);
+					x = gaussSolveCudaBlock(mat, vec);
 					break;
 				case 2:
-					x = gaussSolveCudaMulti(mat, vec, threads);
+					x = gaussSolveCudaRowWise(mat, vec, threads);
 					break;
 					/*
 				case 3:

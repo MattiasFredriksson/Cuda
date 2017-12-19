@@ -144,7 +144,7 @@ __global__ void gausEliminate(float* A, float* b, float* column_k, int rows, int
 	}
 }
 
-Vector gaussSolveCuda(Matrix& mat, Vector& b)
+Vector gaussSolveCudaBlock(Matrix& mat, Vector& b)
 {
 	int n = mat.row;
 	Vector x;
