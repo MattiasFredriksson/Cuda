@@ -67,7 +67,6 @@ Vector gaussSolveCudaRowWise(Matrix& mat, Vector& b, int threads)
 			//Launch a kernel (synced to limit threads) for every row:
 			for (int i = 0; i < iter_end; i++)
 				gausEliminate_Row_Wise << <grid, block, threads * sizeof(float) >> > (dev_A, dev_b, mat.row, mat.col, k, i * threads*grid.x);
-			cudaDeviceSynchronize();
 #ifdef DEBUG
 			read(dev_A, mat.arr.get(), mat.col*mat.row);
 			read(dev_b, b.arr.get(), n);
