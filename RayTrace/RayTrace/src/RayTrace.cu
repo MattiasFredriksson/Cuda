@@ -14,7 +14,7 @@
 
 __constant__ float epsilon = 0.00001f;
 
-const int num_bounces = 5;
+const int num_bounces = 3;
 const int pass_flt3_size = 5;
 #define attenuation 8.f
 
@@ -133,29 +133,29 @@ __device__ bool rayIntersection(const float3* verts, const float3 &ray_dir, cons
 	float3 e2 = verts[indices.z] - p0;
 	float3 q = cross(ray_dir, e2);
 
-	//Check if triangle is parallel with ray direction
 	float a = dot(e1, q);
-	if (a > -epsilon && a < epsilon)
-		return false;
 
 	float f = 1 / a;
 
 	//Calculate area u
 	float3 S = ray_pos - p0;
 	uvw.x = f * dot(S, q);
-	if (uvw.x < 0)
-		return false;
 
 	//Calculate area v
 	float3 R = cross(S, e1);
 	uvw.y = f * dot(ray_dir, R);
-	if (uvw.y < 0 || (uvw.z = 1 - (uvw.x + uvw.y)) < 0) //Check for area w. Since u & v areas is signed w intersect only if u & v is less then 1
-		return false;
+
 
 	//Calculate distance
 	distance = f * dot(e2, R);
 
-	return true;
+	return
+		//Check if triangle is parallel with ray direction
+		(-epsilon > a || a > epsilon) &&
+		uvw.x >= 0 && 
+		uvw.y >= 0 &&
+		//Check for area w. Since u & v areas is signed w intersect only if u + v is less then 1
+		(uvw.z = 1 - (uvw.x + uvw.y)) >= 0;
 }
 
 __device__ bool simpleTrace(const DevArrs &param, const float3& pos, const float3& dir, float &inter_dist, unsigned int &tri_ind, float3 &tri_uvw)
@@ -207,7 +207,6 @@ __device__ float traceRay(const DevArrs &param, float3 &pos, float3& in_dir, flo
 	// Calc. reflected ray
 	pos = in_dir * traverse_dist + pos;
 	surf_norm = calcNorm(param._norms, param._Nind[tri_ind], uvw);
-	in_dir = reflect(in_dir, surf_norm);
 	diffuseFactor *= tri_ind < 449 ? make_float3(0.2f) : make_float3(0.7f); //Material (simple implementation)
 	return traverse_dist;
 }
@@ -249,6 +248,7 @@ __global__ void secondaryKernel(DevArrs params, float3* in_pass, float3* out_pas
 		}
 
 		// Bounce
+		dir = reflect(dir, surf_norm);
 		float traverse_dist = traceRay(params, pos, dir, surf_norm, diffuseFactor);
 		diffuseFactor = traverse_dist < epsilon ? make_float3(0) : diffuseFactor;
 

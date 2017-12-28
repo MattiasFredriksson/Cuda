@@ -147,7 +147,7 @@ void Render(GLuint tex)
 
 int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLine, int nCmdShow)
 {
-	unsigned int width = 1280, height = 960;
+	unsigned int width = 640, height = 480;
 	MSG msg = { 0 };
 	HWND wndHandle = InitWindow(hInstance, width, height); //1. Skapa fönster
 	HACCEL hAccelTable = LoadAccelerators(hInstance, MAKEINTRESOURCE(IDC_LAUNCHWIN32WINDOWFROMCONSOLE)); // Keyboard shortcut table for application commands.
